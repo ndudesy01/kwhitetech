@@ -23,7 +23,7 @@ const slides = document.querySelectorAll('.slide');
 const prevBtn = document.querySelector('.slider-btn.prev');
 const nextBtn = document.querySelector('.slider-btn.next');
 
-if (sliderContainer && prevBtn && nextBtn) {
+if (sliderContainer && prevBtn && nextBtn && !sliderContainer.closest('.ads-slider').classList.contains('search-results-active')) {
     let currentIndex = 0;
     const slideWidth = slides[0].offsetWidth + 30; // width + gap
 
@@ -74,6 +74,15 @@ if (newsletterForm) {
         newsletterForm.reset();
     });
 }
+
+// View Campaign Buttons
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('view-campaign')) {
+        const campaignId = e.target.getAttribute('data-id');
+        // In a real app, this would navigate to campaign detail page
+        alert(`Viewing campaign ${campaignId}. This would navigate to campaign details in a real application.`);
+    }
+});
 
 // Scroll Animations
 const observerOptions = {

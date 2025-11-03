@@ -3,28 +3,34 @@ const campaignsData = [
     {
         id: 1,
         title: "Quantum DeFi Protocol",
-        description: "Next-generation decentralized finance platform with cross-chain liquidity and advanced yield farming.",
+        description: "Next-generation decentralized finance platform with cross-chain liquidity and advanced yield farming mechanisms.",
         category: "defi",
         budget: "$50,000",
-        image: "../images/ads/defi-protocol.jpg",
-        badge: "Hot"
+        image: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+        badge: "Hot",
+        status: "active",
+        date: "2025-03-15"
     },
     {
         id: 2,
         title: "MetaPunks NFT Collection",
-        description: "Exclusive generative art collection with utility features and community rewards.",
+        description: "Exclusive generative art collection with utility features, community rewards, and metaverse integration.",
         category: "nft",
         budget: "$25,000",
-        image: "../images/ads/nft-collection.jpg",
-        badge: "New"
+        image: "https://images.unsplash.com/photo-1642784353723-64da3d3e5b94?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+        badge: "New",
+        status: "active",
+        date: "2025-03-14"
     },
     {
         id: 3,
         title: "SecureChain Wallet",
-        description: "Multi-chain cryptocurrency wallet with advanced security and DeFi integration.",
+        description: "Multi-chain cryptocurrency wallet with advanced security features and seamless DeFi protocol integration.",
         category: "wallet",
         budget: "$75,000",
-        image: "../images/ads/crypto-wallet.jpg"
+        image: "https://images.unsplash.com/photo-1516245834210-8e0b6e0f8e1c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+        status: "active",
+        date: "2025-03-13"
     },
     {
         id: 4,
@@ -32,15 +38,20 @@ const campaignsData = [
         description: "Advanced trading platform with low fees and high liquidity across multiple markets.",
         category: "exchange",
         budget: "$100,000",
-        image: "../images/ads/exchange.jpg"
+        image: "https://images.unsplash.com/photo-1516245834210-8e0b6e0f8e1c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+        status: "upcoming",
+        date: "2025-03-20"
     },
     {
         id: 5,
         title: "Web3 Gaming Platform",
-        description: "Blockchain-based gaming ecosystem with play-to-earn mechanics and NFT assets.",
+        description: "Blockchain-based gaming ecosystem with play-to-earn mechanics and NFT asset ownership.",
         category: "gaming",
         budget: "$60,000",
-        image: "../images/ads/gaming.jpg"
+        image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+        badge: "Trending",
+        status: "active",
+        date: "2025-03-12"
     },
     {
         id: 6,
@@ -48,68 +59,47 @@ const campaignsData = [
         description: "Virtual land development and NFT property sales in leading metaverse platforms.",
         category: "metaverse",
         budget: "$150,000",
-        image: "../images/ads/metaverse.jpg"
+        image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+        status: "active",
+        date: "2025-03-10"
     }
 ];
 
 // Initialize marketplace
 document.addEventListener('DOMContentLoaded', function() {
-    const campaignsGrid = document.getElementById('campaignsGrid');
-
-    if (campaignsGrid) {
-        renderCampaigns(campaignsData);
-        setupFilters();
-    }
+    addResultsInfo();
 });
 
-function renderCampaigns(campaigns) {
+function addResultsInfo() {
     const campaignsGrid = document.getElementById('campaignsGrid');
-    campaignsGrid.innerHTML = '';
+    if (!campaignsGrid) return;
 
-    campaigns.forEach(campaign => {
-        const campaignCard = document.createElement('div');
-        campaignCard.className = 'ad-card';
-        campaignCard.innerHTML = `
-            ${campaign.badge ? `<div class="ad-badge">${campaign.badge}</div>` : ''}
-            <img src="${campaign.image}" alt="${campaign.title}" class="ad-image">
-            <div class="ad-content">
-                <h3>${campaign.title}</h3>
-                <p>${campaign.description}</p>
-                <div class="ad-meta">
-                    <span class="ad-category">${campaign.category}</span>
-                    <span class="ad-budget">${campaign.budget}</span>
-                </div>
-                <button class="btn btn-outline">View Campaign</button>
-            </div>
-        `;
-        campaignsGrid.appendChild(campaignCard);
-    });
-}
+    const resultsInfo = document.createElement('div');
+    resultsInfo.className = 'search-results-info';
+    resultsInfo.innerHTML = `
+        <div class="results-count">Showing ${campaignsData.length} campaigns</div>
+        <div class="results-sort">
+            <label for="resultsSort">Sort by:</label>
+            <select id="resultsSort" class="filter-select">
+                <option value="newest">Newest First</option>
+                <option value="popular">Most Popular</option>
+                <option value="budget-high">Highest Budget</option>
+                <option value="budget-low">Lowest Budget</option>
+            </select>
+        </div>
+    `;
 
-function setupFilters() {
-    const searchInput = document.querySelector('.search-bar input');
-    const categorySelect = document.querySelector('.filter-select');
+    campaignsGrid.parentNode.insertBefore(resultsInfo, campaignsGrid);
 
-    if (searchInput) {
-        searchInput.addEventListener('input', filterCampaigns);
+    // Add sort functionality
+    const sortSelect = document.getElementById('resultsSort');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+            // This will be handled by the search manager
+            if (window.searchManager) {
+                window.searchManager.currentFilters.sortBy = this.value;
+                window.searchManager.performSearch();
+            }
+        });
     }
-
-    if (categorySelect) {
-        categorySelect.addEventListener('change', filterCampaigns);
-    }
-}
-
-function filterCampaigns() {
-    const searchTerm = document.querySelector('.search-bar input').value.toLowerCase();
-    const category = document.querySelector('.filter-select').value;
-
-    const filteredCampaigns = campaignsData.filter(campaign => {
-        const matchesSearch = campaign.title.toLowerCase().includes(searchTerm) ||
-                            campaign.description.toLowerCase().includes(searchTerm);
-        const matchesCategory = !category || campaign.category === category;
-
-        return matchesSearch && matchesCategory;
-    });
-
-    renderCampaigns(filteredCampaigns);
 }
